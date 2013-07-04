@@ -3,6 +3,8 @@
 #include <vector>
 #include <iostream>
 #include <sstream>
+#include <time.h>
+#include <stdlib.h>
 using namespace std;
 template <class T>
 string to_str ( T Number )
@@ -30,7 +32,8 @@ class Matrix
         T& operator () (int i,int j=0);
         T operator () (int i,int j) const;
         Matrix<T> transpose() const;
-        Matrix<T> eachEqual(T (*func)(int elem)) const;
+        Matrix<T> eachEqual(T (*func)(T elem)) const;
+        void randomize(T minVal,T maxVal);
         int getWidth() const;
         int getHeight() const;
 
@@ -138,7 +141,7 @@ Matrix<T> Matrix<T>::transpose() const
  * assign each element of resulting matirx to func of each element of current matrix
  */
 template <class T>
-Matrix<T> Matrix<T>::eachEqual(T (*func)(int elem)) const
+Matrix<T> Matrix<T>::eachEqual(T (*func)(T elem)) const
 {
     Matrix<T> ans(m,n);
     for (int i=0; i<n; i++)
@@ -146,6 +149,17 @@ Matrix<T> Matrix<T>::eachEqual(T (*func)(int elem)) const
             ans(i,j)=func((*this)(i,j));
     return ans;
 }
+/*
+ * assign random value in range [minVal,maxVal] to each element of matrix
+ */
+ template <class T>
+ void Matrix<T>::randomize(T minVal, T maxVal)
+ {
+    srand(time(NULL));
+    for (int i=0; i<n; i++)
+        for (int j=0; j<m; j++)
+            (*this)(i,j)=T(double(rand())/RAND_MAX*(maxVal-minVal))+minVal;
+ }
 /*
  * return number of rows
  */

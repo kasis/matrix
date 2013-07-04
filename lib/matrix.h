@@ -42,7 +42,9 @@ class Matrix
  * multiply Matrix
  */
 template<class T>
-ostream& operator << (ostream& out, const Matrix<T>& A);
+ostream& operator << (ostream& out, const Matrix<T> &A);
+template<class T>
+istream& operator >> (istream& in, const Matrix<T> &A);
 template <class T>
 Matrix<T> operator * (T k,const Matrix<T> &A);
 template <class T>
@@ -194,6 +196,15 @@ ostream& operator << (ostream& out, const Matrix<T>& A)
         out << endl;
     }
     return out;
+}
+template <class T>
+istream& operator >> (istream& in, Matrix<T>& A)
+{
+    for (int i=0; i<A.getHeight(); i++)
+    {
+        for (int j=0; j<A.getWidth(); j++)
+            in >> A(i,j);
+    }
 }
 /*
  * add other Matrix to current Matrix

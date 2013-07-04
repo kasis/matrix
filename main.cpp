@@ -16,6 +16,10 @@ int main()
         a.randomize(1,10);
         cout << "randomize A:\n" << a;
         cout << "A.^2:\n" << a.eachEqual(&sqr);
+        Matrix<int> c(1,1);
+        cout << "Reading matrix<int> C(1,1).\nEnter element: ";
+        cin >> c;
+        cout << "C:\n" << c;
     }
     catch (string err)
     {

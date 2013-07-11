@@ -1,16 +1,19 @@
 #include <iostream>
 #include "lib/matrix.h"
+#include "tests/MatrixTest.h"
 #include <vector>
 using namespace std;
 int sqr(int a) {return a*a;}
 int main()
 {
-    try
+    runAllTests();
+
+    /*try
     {
         int n=5;
-        Matrix<int> a(5,5);
+        Matrix<int> a(5,4);
         cout << "Zero matrix A:\n" << a;
-        Matrix<double> b(5,5,ONES);
+        Matrix<double> b(5,4,ONES);
         cout << "Ones matrix B:\n" << b;
         cout << "B*1.5:\n" << b*1.5;
         a.randomize(1,10);
@@ -25,6 +28,53 @@ int main()
     {
         cout << err << endl;
     }
-    //cout << b(0,0) << endl;
+    //Examples of errors
+    try
+    {
+        Matrix<int> a(1,0);
+        cout << a(0,1) << endl;
+    }
+    catch (string err)
+    {
+        cout << err << endl;
+    }
+    try
+    {
+        const Matrix<int> a(1,0);
+        cout << a(0,1) << endl;
+    }
+    catch (string err)
+    {
+        cout << err << endl;
+    }
+
+    try
+    {
+        Matrix<int> a(1,0);
+        Matrix<int> b(2,0);
+        cout << a+b << endl;
+    }
+    catch (string err)
+    {
+        cout << err << endl;
+    }
+    try
+    {
+        Matrix<int> a(1,0);
+        cout << a*a << endl;
+    }
+    catch (string err)
+    {
+        cout << err << endl;
+    }
+    try
+    {
+        Matrix<int> a(1,0);
+        cout << a.dotProduct(a.transpose())<< endl;
+    }
+    catch (string err)
+    {
+        cout << err << endl;
+    }*/
     return 0;
 }

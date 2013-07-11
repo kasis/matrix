@@ -33,6 +33,7 @@ class Matrix
         T operator () (int i,int j) const;
         Matrix<T> transpose() const;
         Matrix<T> eachEqual(T (*func)(T elem)) const;
+        Matrix<T> product(const Matrix<T>& A) const;
         void randomize(T minVal,T maxVal);
         int getWidth() const;
         int getHeight() const;
@@ -55,11 +56,13 @@ template <class T>
 Matrix<T> operator + (const Matrix<T> &A, const Matrix<T> &B);
 template <class T>
 Matrix<T> operator - (const Matrix<T> &A, const Matrix<T> &B);
-
+template <class T>
+bool operator == (const Matrix<T>& A,const Matrix<T>& B);
 /*
  * create Matrix
  @param _n - number of rows
  @param _m - number of columns
+ @param type - type of matrix
  */
 template <class T>
 Matrix<T>::Matrix(int _n,int _m, MType type)
@@ -104,10 +107,10 @@ T& Matrix<T>::operator () (int i, int j)
     //cerr <<"not const\n";
     if (i>=n || j>=m)
     {
-        string err="In function Matrix::set(): Error. Position of value is out of range.";
+        string err="In class Matrix operator (): Error. Position of value is out of range.";
         throw err;
     }
-    return array[n*i+j];
+    return array[m*i+j];
 }
 
 /*
@@ -123,7 +126,7 @@ T Matrix<T>::operator () (int i, int j) const
         string err="In class Matrix operator (): Error. Position of value is out of range.";
         throw err;
     }
-    return array[n*i+j];
+    return array[m*i+j];
 }
 
 
@@ -145,12 +148,31 @@ Matrix<T> Matrix<T>::transpose() const
 template <class T>
 Matrix<T> Matrix<T>::eachEqual(T (*func)(T elem)) const
 {
-    Matrix<T> ans(m,n);
+    Matrix<T> ans(n,m);
     for (int i=0; i<n; i++)
         for (int j=0; j<m; j++)
             ans(i,j)=func((*this)(i,j));
     return ans;
 }
+/*
+ * assign each element of resulting matrix to product of respective elements of current matrix and parametr matrix
+ */
+template <class T>
+Matrix<T> Matrix<T>::product(const Matrix<T>& A) const
+{
+    if (n!=A.getHeight() || m!=A.getWidth())
+    {
+        string err="In function Matrix::dotProduct(): Error. Incomformat matrixes";
+        err+="(op1 is "+to_str(getHeight())+"x"+to_str(getWidth())+", op2 is "+to_str(A.getHeight())+"x"+to_str(A.getWidth())+") ";
+        throw err;
+    }
+    Matrix<T> ans(n,m);
+    for (int i=0; i<n; i++)
+        for (int j=0; j<m; j++)
+            ans(i,j)=(*this)(i,j)*A(i,j);
+    return ans;
+
+ }
 /*
  * assign random value in range [minVal,maxVal] to each element of matrix
  */
@@ -215,7 +237,7 @@ Matrix<T> operator + (const Matrix<T> &A, const Matrix<T> &B)
     if (B.getHeight()!=A.getHeight() || B.getWidth()!=A.getWidth())
     {
         string err="in class Matrix operator +: nonconformat arguments";
-        err+="(op1 is "+to_str(A.getHeight())+"x"+to_str(B.getWidth())+", op2 is "+to_str(B.getHeight())+"x"+to_str(B.getWidth())+") ";
+        err+="(op1 is "+to_str(A.getHeight())+"x"+to_str(A.getWidth())+", op2 is "+to_str(B.getHeight())+"x"+to_str(B.getWidth())+") ";
         throw err;
     }
     Matrix<T> res (A.getHeight(),A.getWidth());
@@ -304,5 +326,14 @@ Matrix<T> operator * (const Matrix<T> &A, T k)
     return k*A;
 }
 
+template <class T>
+bool operator == (const Matrix<T>& A, const Matrix<T>& B)
+{
+    if (A.getHeight()!=B.getHeight() || A.getWidth()!=B.getWidth()) return 0;
+    for (int i=0; i<A.getHeight(); i++)
+        for (int j=0; j<A.getWidth(); j++)
+            if (A(i,j)!=B(i,j)) return 0;
+    return 1;
+}
 
 #endif // Matrix_H_INCLUDED
